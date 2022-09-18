@@ -1,5 +1,6 @@
-import typing
 from abc import ABC, abstractmethod
+from typing import Optional
+
 import requests
 from bs4 import BeautifulSoup
 from food_truck import FoodTruck
@@ -20,12 +21,19 @@ class Brewery(ABC):
         self.url = url
 
     def make_request(self) -> BeautifulSoup:
-        headers = {
+        headers: dict[str, str] = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
         }
-        response = requests.get(self.url, headers=headers)
+        response: requests.Response = requests.get(self.url, headers=headers)
         return BeautifulSoup(response.content, "html.parser")
 
     @abstractmethod
-    def parse(self) -> FoodTruck | None:
+    def parse(self) -> Optional[FoodTruck]:
         pass
+
+
+    def __str__(self) -> str:
+        return f"{self.name}: {self.url}"
+
+    def __repr__(self) -> str:
+        return str(self)

@@ -1,25 +1,26 @@
+from typing import Optional, List
 import datetime
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 from brewery import Brewery
 from food_truck import FoodTruck
 
 class Reubens(Brewery):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__('Reuben\'s', 'https://reubensbrews.com/visit-us/#food-trucks')
 
-    def parse(self) -> FoodTruck | None:
-        soup = self.make_request()
-        trucks = soup.select('*[class="food-truck-schedule-item"]')
-        today = datetime.date.today()
-        today_date = f"{today.month}/{today.day}"
+    def parse(self) -> Optional[FoodTruck]:
+        soup: BeautifulSoup = self.make_request()
+        trucks: List[element] = soup.select('*[class="food-truck-schedule-item"]')
+        today: datetime = datetime.date.today()
+        today_date: str = f"{today.month}/{today.day}"
 
         for truck in trucks:
-            truck_date = truck.select_one('div[class="food-truck-day-name"]').text.strip()
+            truck_date: str = truck.select_one('div[class="food-truck-day-name"]').text.strip()
             if today_date not in truck_date:
                 continue
 
-            truck_name = truck.select_one('div.vendor').text.strip()
+            truck_name: str = truck.select_one('div.vendor').text.strip()
 
             return FoodTruck(truck_name, truck_date, '')
 
