@@ -1,6 +1,12 @@
-from breweries import *
+import datetime
 
-if __name__ == '__main__':
+from breweries import *
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
     breweries = [
         FairIsle(),
         LuckyEnvelope(),
@@ -10,6 +16,6 @@ if __name__ == '__main__':
         UrbanFamily(),
         # Yonder(),
     ]
-
-    for brewery in breweries:
-        print(brewery.name, brewery.parse())
+    today = datetime.date.today().strftime('%A, %B %d, %Y')
+    heading = f"<h1>Ballard Brewery Food Trucks for {today}:</h1>"
+    return f"<html><body>{heading}" + '\n'.join([f"<p><strong>{brewery.name}</strong>: {brewery.parse()}</p>" for brewery in breweries]) + "</body></html>"

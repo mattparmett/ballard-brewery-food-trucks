@@ -6,4 +6,4 @@ class FoodTruck:
 
     def __str__(self):
         hours = f" at {self.hours}" if self.hours else ""
-        return f"{self.name} on {self.date}" + hours
+        return f"{self.name}" + hours
